@@ -1,5 +1,7 @@
 package com.example.pc.dietapp;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.AsyncTask;
@@ -57,7 +59,19 @@ public class JoinActivity extends AppCompatActivity {
     private View.OnClickListener btnJoinOkClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            new JoinProcTask().execute();
+            AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
+
+            builder.setTitle("회원가입")
+                    .setMessage("회원가입이 완료되었습니다.")
+                    .setCancelable(false)
+                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            new JoinProcTask().execute();
+                        }
+                    }); //취소버튼 클릭시 설정
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
     };  //end btnJoinOkClick
 
@@ -116,7 +130,7 @@ public class JoinActivity extends AppCompatActivity {
                         Intent i = new Intent(JoinActivity.this, LoginActivity.class);
                         startActivity(i);
                     }else {
-                        Toast.makeText(JoinActivity.this, "아이디가 없음", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(JoinActivity.this, bean.getResultMsg(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }catch (Exception e){

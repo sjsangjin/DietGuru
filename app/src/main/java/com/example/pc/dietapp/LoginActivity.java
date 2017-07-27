@@ -1,5 +1,6 @@
 package com.example.pc.dietapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -23,6 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.comparator.BooleanComparator;
 import org.springframework.web.client.RestTemplate;
 
 
@@ -33,8 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mEdtUserId, mEdtUserPw;
     private ProgressBar mProgressBar;
     private CheckBox mAutoLogin;
-    SharedPreferences pref;
-    SharedPreferences editor;
+    String loginId, loginPw;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,8 @@ public class LoginActivity extends AppCompatActivity {
         mEdtUserPw = (EditText)findViewById(R.id.edtUserPw);
         mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
         mAutoLogin = (CheckBox)findViewById(R.id.chkAutoLogin);
+
+
 
         findViewById(R.id.btnJoin).setOnClickListener(btnJoinClick);
         findViewById(R.id.btnLogin).setOnClickListener(btnLoginClick);
