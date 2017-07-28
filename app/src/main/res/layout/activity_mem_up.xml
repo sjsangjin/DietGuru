@@ -200,6 +200,7 @@
                         android:hint="다짐을 입력해주세요"
                         android:inputType="textMultiLine"
                         android:textSize="14sp" />
+
                 </LinearLayout>
             </LinearLayout>
 
@@ -211,6 +212,15 @@
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:text="정보수정" />
+
+            <Button
+                android:id="@+id/btnByeOK"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:text="회원탈퇴" />
 
         </LinearLayout>
 

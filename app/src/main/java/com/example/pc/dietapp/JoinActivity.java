@@ -1,5 +1,7 @@
 package com.example.pc.dietapp;
 
+//회원가입 공백으로 안들어가게 처리해야함!
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;

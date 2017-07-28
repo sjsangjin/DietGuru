@@ -1,17 +1,18 @@
 package com.example.pc.dietapp.Bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by pc on 2017-07-27.
  */
 
-public class WeightBean extends CommonBean{
+public class WeightBean extends CommonBean implements Serializable{
 
     private WeightBeanSub weightBean;
     private List<WeightBeanSub> weightList;
 
-    class WeightBeanSub{
+    public class WeightBeanSub implements Serializable{
         private String date;
         private String d_kg;
 

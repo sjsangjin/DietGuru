@@ -42,6 +42,7 @@ public class MemUpActivity extends AppCompatActivity {
         mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
 
         findViewById(R.id.btnUpOk).setOnClickListener(btnUpClick);
+        findViewById(R.id.btnByeOK).setOnClickListener(btnByeClick);
     }//end OnCreate
 
 
@@ -70,6 +71,31 @@ public class MemUpActivity extends AppCompatActivity {
             dialog.show();
         }
     };  //end btnUpClick
+
+    private View.OnClickListener btnByeClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MemUpActivity.this);
+
+            builder.setTitle("회원탈퇴확인")
+                    .setMessage("정말로 탈퇴하시겠습니까?")
+                    .setCancelable(false)
+                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            new ByeTask().execute();
+                        }
+                    }) //확인버튼 클릭시 이벤트
+                    .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    }); //취소버튼 클릭시 설정
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+    };  //end btnByeClick
 
 
 
@@ -131,6 +157,70 @@ public class MemUpActivity extends AppCompatActivity {
                     }
                 }
             }catch (Exception e){
+                Toast.makeText(MemUpActivity.this, "파싱실패", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
+        }//end onPostExecute
+    }//end UpTask
+
+    private class ByeTask extends AsyncTask<String, Void, String> {
+        public static final String URL_BYE_PROC = Constants.BASE_URL + "rest/deleteMember.do";
+        private String userId, userPw, userCm, userKg, userHkg, userWord;
+
+        @Override
+        protected void onPreExecute() {
+            mProgressBar.setVisibility(View.VISIBLE);
+
+            userId = mEdtUpId.getText().toString();
+            userPw = mEdtUpPw.getText().toString();
+            userCm = mEdtUpCm.getText().toString();
+            userKg = mEdtUpKg.getText().toString();
+            userHkg = mEdtUpHkg.getText().toString();
+            userWord = mEdtUpWord.getText().toString();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.getMessageConverters().add(new FormHttpMessageConverter());
+
+                MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+                //map.add(" " <- 이부분은 memberBean의 이름과 같게 해주어야함!!!!! 꼭!!!!!!!
+                map.add("userId", userId);
+                map.add("userPw", userPw);
+                map.add("cm", userCm);
+                map.add("kg", userKg);
+                map.add("h_kg", userHkg);
+                map.add("word", userWord);
+
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.ALL.APPLICATION_FORM_URLENCODED);
+                HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(map, headers);
+
+                return restTemplate.postForObject(URL_BYE_PROC, request, String.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }   //end doInBackground
+
+        @Override
+        protected void onPostExecute(String s) {
+            mProgressBar.setVisibility(View.INVISIBLE);
+            Gson gson = new Gson();
+            try {
+                JoinBean bean = gson.fromJson(s, JoinBean.class);
+                if (bean != null) {
+                    if (bean.getResult().equals("ok")) {
+                        finish();
+                    } else {
+                        Toast.makeText(MemUpActivity.this, bean.getResultMsg(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            } catch (Exception e) {
                 Toast.makeText(MemUpActivity.this, "파싱실패", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
